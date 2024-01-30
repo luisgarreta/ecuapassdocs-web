@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Cartaporte: {{ cartaporte.numero }}</h1>
+
+  <p><strong>Tipo:</strong> {{ cartaporte.tipo }}</p>
+  <p><strong>Remitente:</strong> <a href="{{ cartaporte.remitente.get_absolute_url }}">{{ cartaporte.remitente }}</a></p> <!-- enlace de detalle del autor aún no definido -->
+  <p><strong>Destinatario:</strong> <a href="{{ cartaporte.destinatario.get_absolute_url }}">{{ cartaporte.destinatario }}</a></p>
+  <p><strong>Fecha emision:</strong> {{ cartaporte.fecha_emision }}</p>
+
+  <button><a href="{% url 'cartaporte-update' cartaporte.numero %}">Editar</a></button>
+  <button><a href="{% url 'cartaporte-delete' cartaporte.numero %}">Eliminar</a></button>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Manifiestos</h4>
+
+    {% for copy in cartaporte.manifiesto_set.all %}
+    <hr>
+    <p class="text-muted"><strong>Número:</strong> {{copy.numero}}</p>
+    <p><strong>Tipo:</strong> {{copy.tipo}}</p>
+    <p><strong>Conductor:</strong> {{copy.conductor}}</p>
+    <p><strong>Vehiculo:</strong> {{copy.vehiculo}}</p>
+    <p><strong>Fecha emisión:</strong> {{copy.fecha_emision}}</p>
+    {% endfor %}
+  </div>
+{% endblock %}
