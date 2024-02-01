@@ -72,12 +72,17 @@ class CartaporteDoc (models.Model):
 	txt23 = models.CharField (max_length=200, null=True)
 	txt24 = models.CharField (max_length=200, null=True)
 
+#	def get_absolute_url(self):
+#		"""Returns the url to access a particular language instance."""
+#		#return reverse('empresa-detail', args=[str(self.id)])
+
+
 	def __str__ (self):
 		return f"{self.numero}, {self.txt02}, {self.txt03}"
 	
 	def getNumberFromId (self):
 		numero = 2000000+ self.numero 
-		numero = f"CO{numero}"
+		numero = f"CI{numero}"
 		return (self.numero)
 		
 #--------------------------------------------------------------------

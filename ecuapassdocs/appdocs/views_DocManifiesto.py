@@ -1,5 +1,5 @@
 
-import json, os, re
+import json, os, re, traceback
 from os.path import join
 
 from django.http import HttpResponse, HttpResponseRedirect
@@ -27,47 +27,6 @@ class DocManifiestoView (DocEcuapassView):
 	def __init__(self, *args, **kwargs):
 		super().__init__ ("manifiesto", "manifiesto-forma.html", "manifiesto_input_parameters.json", *args, **kwargs)
 
-	#-------------------------------------------------------------------
-	#-- Guarda los campos del documento manifiesto (incluye numero) a la BD
-	#-------------------------------------------------------------------
-	def saveDocumentToDB (self, inputValues, fieldValues, flagSave):
-		# Create ecuapassDoc and save it to get id
-		if flagSave == "GET-ID":
-			# Save Manifiesto document
-			ecuapassDoc = ManifiestoDoc ()
-			ecuapassDoc.save ()
-			ecuapassDoc.numero = self.getManifiestoNumber (ecuapassDoc.id)
-			ecuapassDoc.save ()
-
-			# Save Manifiesto register
-			manifiestoReg = Manifiesto ()
-			manifiestoReg.setValues (ecuapassDoc, fieldValues)
-			manifiestoReg.save ()
-
-			return ecuapassDoc.numero
-		elif flagSave == "SAVE-DATA":
-			# Retrieve instance and save Manifiesto document
-			docNumber = inputValues ["txt00"]
-			ecuapassDoc = get_object_or_404 (ManifiestoDoc, numero=docNumber)
-
-			# Assign values to the attributes using dictionary keys
-			for key, value in inputValues.items():
-				setattr(ecuapassDoc, key, value)
-
-			ecuapassDoc.save ()
-
-			# Retrieve and save Manifiesto register
-			manifiestoReg = get_object_or_404 (Manifiesto, numero=docNumber)
-			manifiestoReg.setValues (ecuapassDoc, fieldValues)
-			manifiestoReg.save ()
-
-			return inputValues
-
-	#-- Create a formated manifiesto number ranging from 2000000 
-	def getManifiestoNumber (self, id):
-		numero = f"CO{2000000 + id}"
-		return (numero)
-		
 #--------------------------------------------------------------------
 #-- Class for autocomplete options while the user is typing
 #--------------------------------------------------------------------
@@ -107,3 +66,4 @@ class ConductorOptionsView (View):
 			itemOptions.append (newOption)
 		
 		return JsonResponse (itemOptions, safe=False)
+

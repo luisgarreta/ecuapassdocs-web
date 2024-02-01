@@ -4,6 +4,15 @@ from django.shortcuts import get_object_or_404
 from .models_DocCartaporte import Empresa, Cartaporte, CartaporteDoc
 from .models_DocManifiesto import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
 
+def cartaportefun (recordId):
+	print (">>>>>>>>>>>>>>>>>", recordId, "<<<<<<<<<<<<<<<<<<<")
+	return render (request, 'index.html',
+                   context={'num_empresas':num_empresas,'num_conductors':num_conductors,
+				             'num_vehiculos':num_vehiculos,'num_cartaportes':num_cartaportes, 
+							 'num_manifiestos':num_manifestos,'num_visits': num_visits},
+                  )
+
+
 def index(request):
     """
     Función vista para la página inicio del sitio.
@@ -118,16 +127,23 @@ class ConductorDelete(login_required_class(DeleteView)):
 #--------------------------------------------------------------------
 #-- Cartaporte
 #--------------------------------------------------------------------
+#class CartaporteDocDetailView(generic.DetailView):
+#    model = Cartaporte
+
 class CartaporteListView(generic.ListView):
     model = Cartaporte
 
 class CartaporteDetailView(generic.DetailView):
     model = Cartaporte
 
-
 class CartaporteCreate(login_required_class(CreateView)):
     model = Cartaporte
     fields = '__all__'
+
+class CartaporteDoc(login_required_class(UpdateView)):
+    model = Cartaporte
+    fields = '__all__'
+    #fields = ['tipo','remitente','destinatario','fecha_emision']
 
 class CartaporteUpdate(login_required_class(UpdateView)):
     model = Cartaporte

@@ -1,5 +1,5 @@
 
-import json, os, re
+import json, os, re, sys
 from os.path import join
 
 from django.http import HttpResponse, HttpResponseRedirect
@@ -17,6 +17,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Own imports
 from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader 
 from ecuapassdocs.ecuapassutils.pdfcreator import CreadorPDF 
+
+from .models import Cartaporte, Manifiesto
+from .models import CartaporteDoc, ManifiestoDoc
 #from .pdfcreator import CreadorPDF
 
 #--------------------------------------------------------------------
@@ -36,8 +39,10 @@ class DocEcuapassView(LoginRequiredMixin, View):
 	# Envía los parámetros o restricciones para cada campo en la forma de HTML
 	#-------------------------------------------------------------------
 	def get (self, request, *args, **kwargs):
+		print (">>>>>>>>>>> In get <<<<<<<<<<<<<")
 		# If edit, retrieve the additional parameter from kwargs
 		pk = kwargs.get ('pk')
+		print (f">>>>>>>>>>> pk: {pk} <<<<<<<<<<<")
 
 		# Load parameters from package
 		inputParameters = ResourceLoader.loadJson ("docs", self.parametersFile)
@@ -118,6 +123,25 @@ class DocEcuapassView(LoginRequiredMixin, View):
 		return jsonFieldsDic
 
 	#-------------------------------------------------------------------
+	#-- Set saved or default values to inputs
+	#-------------------------------------------------------------------
+	def setValuesToInputs (self, recordId, inputParameters):
+		docRecord = None
+		if (self.docType == "cartaporte"):
+			docRecord = CartaporteDoc.objects.get (id=recordId)
+		elif (self.docType == "manifiesto"):
+			docRecord = ManifiestoDoc.objects.get (id=recordId)
+		else:
+			print (f"Error: Tipo de documento '{docType}' no soportado")
+			sys.exit (0)
+
+		# Iterating over fields
+		for field in docRecord._meta.fields [2:]:   # Not include "numero" and "id"
+			value = getattr(docRecord, field.name)
+			inputParameters [field.name]["value"] = value if value else ""
+
+		return inputParameters
+	#-------------------------------------------------------------------
 	#-- Create a PDF from document
 	#-------------------------------------------------------------------
 	def createPDF (self, inputValues, button_type):
@@ -131,3 +155,61 @@ class DocEcuapassView(LoginRequiredMixin, View):
 
 		return (os.path.basename (outPdfPath), pdfContent)
 
+	#-------------------------------------------------------------------
+	#-- Save document to DB
+	#-------------------------------------------------------------------
+	def saveDocumentToDB (self, inputValues, fieldValues, flagSave):
+		docClass, modelClass = None, None
+		if self.docType == "cartaporte":
+			docClass, modelClass = CartaporteDoc, Cartaporte
+		elif self.docType == "manifiesto":
+			docClass, modelClass = ManifiestoDoc, Manifiesto
+		else:
+			print (f"Error: Tipo de documento '{docType}' no soportado")
+			sys.exit (0)
+			
+		# Create ecuapassDoc and save it to get id
+		if flagSave == "GET-ID":
+			# Save Cartaporte document
+			ecuapassDoc = docClass ()
+			ecuapassDoc.save ()
+			ecuapassDoc.numero = self.createDocumentNumber (ecuapassDoc.id)
+			ecuapassDoc.save ()
+
+			# Save Cartaporte register
+			manifiestoReg = modelClass (id=ecuapassDoc.id)
+			manifiestoReg.setValues (ecuapassDoc, fieldValues)
+			manifiestoReg.save ()
+
+			return ecuapassDoc.numero
+		elif flagSave == "SAVE-DATA":
+			# Retrieve instance and save Cartaporte document
+			docNumber = inputValues ["txt00"]
+			ecuapassDoc = get_object_or_404 (docClass, numero=docNumber)
+
+			# Assign values to the attributes using dictionary keys
+			for key, value in inputValues.items():
+				setattr(ecuapassDoc, key, value)
+
+			ecuapassDoc.save ()
+
+			# Retrieve and save Cartaporte register
+			manifiestoReg = get_object_or_404 (modelClass, numero=docNumber)
+			manifiestoReg.setValues (ecuapassDoc, fieldValues)
+			manifiestoReg.save ()
+
+			return inputValues
+
+	#-------------------------------------------------------------------
+	#-- Create a formated document number ranging from 2000000 
+	#-------------------------------------------------------------------
+	def createDocumentNumber (self, id):
+		if self.docType == "cartaporte":
+			numero = f"CPI{2000000 + id}"
+		elif self.docType == "manifiesto":
+			numero = f"MCI{2000000 + id}"
+		else:
+			print (f"Error: Tipo de documento '{docType}' no soportado")
+			sys.exit (0)
+
+		return (numero)

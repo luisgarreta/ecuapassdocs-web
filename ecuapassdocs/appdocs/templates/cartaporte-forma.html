@@ -248,13 +248,6 @@
 			textArea.style.textAlign = input ["align"];
 			textArea.style.position = "absolute";
 			textArea.addEventListener ('input', handleInput);
-
-		//	const className = textArea.className;
-		//	input = inputsParameters [className]
-		//	textArea.style.fontSize  = input["fontSize"];
-		//	textArea.style.textAlign = "align" in input ? input["align"] : "left"
-		//	textArea.style.position = "absolute";
-		//	textArea.addEventListener ('input', handleInput);
 		});
 
 		// Control max number of lines and chars according to className
@@ -264,12 +257,6 @@
 
 			MAXLINES = inputsParameters [textArea.id]["maxLines"];
 			MAXCHARS = inputsParameters [textArea.id]["maxChars"] * 3.2;
-//			const allClasses = textArea.className.split(" ");
-//			const inputClass = allClasses.filter (str => str.startsWith ("input_"))
-//			const className = inputClass [0]
-//			MAXLINES = inputsParameters [className]["maxLines"];
-//			MAXCHARS = inputsParameters [className]["maxChars"] * 3.2;
-//			FONTSIZE = inputsParameters [className]["fontSize"];
 
 			// Control maximum number of chars
 			lines = pdf.splitTextToSize (textArea.value, MAXCHARS);
@@ -338,7 +325,6 @@
 					}
 				});
 			});
-
 
 			// Scripts for autocomplete options in input fields
 			empresaInputs = getTextAreasByClassName ("input_empresa")

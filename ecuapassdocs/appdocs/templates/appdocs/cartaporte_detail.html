@@ -5,12 +5,12 @@
 
 	<p><strong>Remitente:</strong> 
 		<a href="{{ cartaporte.remitente.get_absolute_url }}">{{ cartaporte.remitente }}</a>
-	</p> <!-- enlace de detalle del autor aún no definido -->
+	</p> 
 
 	<p><strong>Fecha emision:</strong> {{ cartaporte.fecha_emision }}</p>
 
 	<p><strong>Documento:</strong> 
-		<a href="{{ cartaporte.documento.get_absolute_url }}">{{ cartaporte.documento }}</a>
+		<a href="{% url 'cartaporte' %}{{ cartaporte.id }}">{{ cartaporte.numero }}</a>
 	</p>
 
 	<button><a href="{% url 'cartaporte-update' cartaporte.id %}">Editar</a></button>
@@ -22,8 +22,6 @@
 		{% for copy in cartaporte.manifiesto_set.all %}
 		<hr>
 		<p class="text-muted"><strong>Número:</strong> {{copy.numero}}</p>
-		<p><strong>Tipo:</strong> {{copy.tipo}}</p>
-		<p><strong>Conductor:</strong> {{copy.conductor}}</p>
 		<p><strong>Vehiculo:</strong> {{copy.vehiculo}}</p>
 		<p><strong>Fecha emisión:</strong> {{copy.fecha_emision}}</p>
 		{% endfor %}

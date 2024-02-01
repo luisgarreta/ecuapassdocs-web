@@ -26,58 +26,6 @@ class DocCartaporteView (DocEcuapassView):
 	def __init__(self, *args, **kwargs):
 		super().__init__ ("cartaporte", "cartaporte-forma.html", "cartaporte_input_parameters.json", *args, **kwargs)
 
-	def setValuesToInputs (self, recordId, inputParameters):
-		docRecord = CartaporteDoc.objects.get (id=recordId)
-		# Iterating over fields
-		for field in docRecord._meta.fields [2:]:   # Not include "numero" and "id"
-			value = getattr(docRecord, field.name)
-			inputParameters [field.name]["value"] = value if value else ""
-
-		#for key in inputParameters.keys():
-		#	print (">>> parametersFile:", key, inputParameters [key]["value"])
-		return inputParameters
-
-	#-------------------------------------------------------------------
-	#-- Guarda los campos del documento manifiesto (incluye numero) a la BD
-	#-------------------------------------------------------------------
-	def saveDocumentToDB (self, inputValues, fieldValues, flagSave):
-		# Create ecuapassDoc and save it to get id
-		if flagSave == "GET-ID":
-			# Save Cartaporte document
-			ecuapassDoc = CartaporteDoc ()
-			ecuapassDoc.save ()
-			ecuapassDoc.numero = self.getManifiestoNumber (ecuapassDoc.id)
-			ecuapassDoc.save ()
-
-			# Save Cartaporte register
-			manifiestoReg = Cartaporte ()
-			manifiestoReg.setValues (ecuapassDoc, fieldValues)
-			manifiestoReg.save ()
-
-			return ecuapassDoc.numero
-		elif flagSave == "SAVE-DATA":
-			# Retrieve instance and save Cartaporte document
-			docNumber = inputValues ["txt00"]
-			ecuapassDoc = get_object_or_404 (CartaporteDoc, numero=docNumber)
-
-			# Assign values to the attributes using dictionary keys
-			for key, value in inputValues.items():
-				setattr(ecuapassDoc, key, value)
-
-			ecuapassDoc.save ()
-
-			# Retrieve and save Cartaporte register
-			manifiestoReg = get_object_or_404 (Cartaporte, numero=docNumber)
-			manifiestoReg.setValues (ecuapassDoc, fieldValues)
-			manifiestoReg.save ()
-
-			return inputValues
-
-	#-- Create a formated manifiesto number ranging from 2000000 
-	def getManifiestoNumber (self, id):
-		numero = f"CO{2000000 + id}"
-		return (numero)
-		
 	#----------------------------------------------------------------
 	#-- Embed fields info (key:value) into PDF doc
 	#-- Info is embedded according to Azure format
@@ -128,7 +76,6 @@ class EmpresaOptionsView (View):
 
 			newOption = {"itemLine" : itemLine, "itemText" : itemText}
 			itemOptions.append (newOption)
-		
 
 		return JsonResponse (itemOptions, safe=False)
 

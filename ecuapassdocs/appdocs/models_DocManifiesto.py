@@ -105,11 +105,6 @@ class ManifiestoDoc (models.Model):
 	def __str__ (self):
 		return f"{self.numero}, {self.txt03}"
 	
-	def getNumberFromId (self):
-		numero = 2000000+ self.numero 
-		numero = f"CO{numero}"
-		return (self.numero)
-		
 #--------------------------------------------------------------------
 # Model Manifiesto
 #--------------------------------------------------------------------
@@ -139,18 +134,19 @@ class Manifiesto (models.Model):
 		
 	
 	def getCartaporte (self, manifiestoInfo):
+		numero = None
 		try:
 			numero = manifiesto.getNumeroCPIC ()
 			record = Cartaporte.objects.get (numero=desired_value)
 			return record
 		except: 
 			print (f"Exepcion: Cartaporte número '{numero}' no encontrado.")
-			return None
+		return None
 
 		
 	def getVehiculo (self, manifiestoInfo, vehicleType):
 		try:
-			info                       = manifiestoInfo.getVehiculoRemolqueInfo (vehicleType)
+			info = manifiestoInfo.getVehiculoRemolqueInfo (vehicleType)
 
 			if any (value is None for value in info.values()):
 				return None
@@ -172,7 +168,7 @@ class Manifiesto (models.Model):
 
 	def createTemporalJson (self, fieldValues):
 		tmpPath        = tempfile.gettempdir ()
-		jsonFieldsPath = os.path.join (tmpPath, f"CARTAPORTE-{self.numero}.json")
+		jsonFieldsPath = os.path.join (tmpPath, f"MANIFIESTO-{self.numero}.json")
 		json.dump (fieldValues, open (jsonFieldsPath, "w"))
 		return (jsonFieldsPath, tmpPath)
 

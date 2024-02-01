@@ -12,12 +12,9 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     path("cartaporte/", DocCartaporteView.as_view(), name="cartaporte"),
-    path('cartaporte/<pk>', DocCartaporteView.as_view(), name='cartaporte-detail'),
     path('cartaporte/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
-
-    path("manifiesto/", DocManifiestoView.as_view(), name="manifiesto"),
-    path('manifiesto/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
-    path('manifiesto/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
+    path('cartaporte/<pk>/opciones-empresa/', EmpresaOptionsView.as_view(), name='opciones-empresa'),
+    path('cartaporte/<pk>/', DocCartaporteView.as_view(), name='cartaporte-documento'),
 
     path('cartaportes/', views.CartaporteListView.as_view(), name='cartaportes'),
     path('cartaportes/<pk>', views.CartaporteDetailView.as_view(), name='cartaporte-detail'),
@@ -25,8 +22,16 @@ urlpatterns = [
     path('cartaporte/<pk>/update/', views.CartaporteUpdate.as_view(), name='cartaporte-update'),
     path('cartaporte/<pk>/delete/', views.CartaporteDelete.as_view(), name='cartaporte-delete'),
 
+
+    path("manifiesto/", DocManifiestoView.as_view(), name="manifiesto"),
+    path('manifiesto/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
+    path('manifiesto/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
+    path('manifiesto/<pk>/opciones-vehiculo/', VehiculoOptionsView.as_view(), name='opciones-vehiculo'),
+    path('manifiesto/<pk>/opciones-conductor/', ConductorOptionsView.as_view(), name='opciones-conductor'),
+    path('manifiesto/<pk>/', DocManifiestoView.as_view(), name='manifiesto-documento'),
+
     path('manifiestos/', views.ManifiestoListView.as_view(), name='manifiestos'),
-    path('manifiesto/<pk>', views.ManifiestoDetailView.as_view(), name='manifiesto-detail'),
+    path('manifiestos/<pk>', views.ManifiestoDetailView.as_view(), name='manifiesto-detail'),
     path('manifiesto/create/', views.ManifiestoCreate.as_view(), name='manifiesto-create'),
     path('manifiesto/<pk>/update/', views.ManifiestoUpdate.as_view(), name='manifiesto-update'),
     path('manifiesto/<pk>/delete/', views.ManifiestoDelete.as_view(), name='manifiesto-delete'),
