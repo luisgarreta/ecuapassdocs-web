@@ -16,7 +16,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Own imports
 from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader 
-from ecuapassdocs.ecuapassutils.pdfcreator import CreadorPDF 
+#from ecuapassdocs.ecuapassutils.pdfcreator import CreadorPDF 
+from .pdfcreator import CreadorPDF 
 
 from .models import Cartaporte, Manifiesto
 from .models import CartaporteDoc, ManifiestoDoc
@@ -25,8 +26,7 @@ from .models import CartaporteDoc, ManifiestoDoc
 #--------------------------------------------------------------------
 #-- Vista para manejar las solicitudes de manifiesto
 #--------------------------------------------------------------------
-#class DocEcuapassView (View):
-class DocEcuapassView(LoginRequiredMixin, View):
+class EcuapassDocView(LoginRequiredMixin, View):
 
 	def __init__(self, docType, templateName, parametersFile, *args, **kwargs):
 		super().__init__ (*args, **kwargs)
@@ -39,10 +39,8 @@ class DocEcuapassView(LoginRequiredMixin, View):
 	# Envía los parámetros o restricciones para cada campo en la forma de HTML
 	#-------------------------------------------------------------------
 	def get (self, request, *args, **kwargs):
-		print (">>>>>>>>>>> In get <<<<<<<<<<<<<")
 		# If edit, retrieve the additional parameter from kwargs
 		pk = kwargs.get ('pk')
-		print (f">>>>>>>>>>> pk: {pk} <<<<<<<<<<<")
 
 		# Load parameters from package
 		inputParameters = ResourceLoader.loadJson ("docs", self.parametersFile)
@@ -89,7 +87,7 @@ class DocEcuapassView(LoginRequiredMixin, View):
 				return JsonResponse(response_data, safe=False)
 		elif "clonar" in button_type:
 			response_data      = {'numero': "CLON"}
-			return JsonResponse(response_data, safe=False)
+			return JsonResponse (response_data, safe=False)
 		else:
 			print (">>> Error: No se conoce opción del botón presionado:", button_type)
 				

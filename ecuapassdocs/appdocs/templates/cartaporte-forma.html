@@ -11,6 +11,12 @@
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+	<!-- Own JS Scripts -->
+	<script src="{% static 'appdocs/js/loadInputParameters.js' %}"></script>
+	<!--
+	<script src="{% static 'appdocs/js/autosave.js' %}"></script>
+	-->
+
 	<title>Creador de Cartas de Porte</title>
 
     <style>
@@ -37,7 +43,7 @@
             width: 1100px; 
             height: 1424px; 
 
-            background: rgba(55, 55, 255, 0.2); 
+            background: rgba(55, 55, 255, 0.05); 
             padding: 00px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 1.0); 
         }
@@ -256,11 +262,25 @@
 			convertToUpperCase (textArea);
 
 			MAXLINES = inputsParameters [textArea.id]["maxLines"];
-			MAXCHARS = inputsParameters [textArea.id]["maxChars"] * 3.2;
+			//MAXCHARS = inputsParameters [textArea.id]["maxChars"] * 3.6;
+			MAXCHARS = inputsParameters [textArea.id]["maxChars"];
 
 			// Control maximum number of chars
-			lines = pdf.splitTextToSize (textArea.value, MAXCHARS);
-			textArea.value = lines.join("\n");
+			//lines = pdf.splitTextToSize (textArea.value, MAXCHARS);
+			//textArea.value = lines.join("\n");
+			var lines = textArea.value.split('\n');
+
+            for (var i = 0; i < lines.length; i++) {
+                if (lines[i].length > MAXCHARS) {
+                    // Truncate the line to the maximum allowed characters
+                    var remainingChars = lines[i].substring(MAXCHARS);
+                    lines[i] = lines[i].substring(0, MAXCHARS);
+                    // Move the remaining characters to the next line
+                    lines.splice(i + 1, 0, remainingChars);
+                }
+            }
+            // Join the modified lines and set the textarea value
+            textArea.value = lines.join('\n');			
 
 			// Control maximum number of lines
 			text = textArea.value;

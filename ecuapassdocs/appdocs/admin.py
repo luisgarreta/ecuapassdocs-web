@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models_DocCartaporte import Empresa, Cartaporte, CartaporteDoc
-from .models_DocManifiesto import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
+from .models_CartaporteDoc import Empresa, Cartaporte, CartaporteDoc
+from .models_ManifiestoDoc import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
 #from .models import Empresa, Conductor, Vehiculo, Cartaporte, Manifiesto
 
 #admin.site.register(Empresa)

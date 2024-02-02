@@ -1,16 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
-from .models_DocCartaporte import Empresa, Cartaporte, CartaporteDoc
-from .models_DocManifiesto import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
-
-def cartaportefun (recordId):
-	print (">>>>>>>>>>>>>>>>>", recordId, "<<<<<<<<<<<<<<<<<<<")
-	return render (request, 'index.html',
-                   context={'num_empresas':num_empresas,'num_conductors':num_conductors,
-				             'num_vehiculos':num_vehiculos,'num_cartaportes':num_cartaportes, 
-							 'num_manifiestos':num_manifestos,'num_visits': num_visits},
-                  )
+from .models_CartaporteDoc import Empresa, Cartaporte, CartaporteDoc
+from .models_ManifiestoDoc import Conductor, Vehiculo, Manifiesto, ManifiestoDoc
 
 
 def index(request):

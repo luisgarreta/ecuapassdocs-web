@@ -10,7 +10,7 @@
 	<p><strong>Fecha emision:</strong> {{ cartaporte.fecha_emision }}</p>
 
 	<p><strong>Documento:</strong> 
-		<a href="{% url 'cartaporte' %}{{ cartaporte.id }}">{{ cartaporte.numero }}</a>
+		<a href="{% url 'cartaporte' %}{{ cartaporte.id }}" target="_blank">{{ cartaporte.numero }}</a>
 	</p>
 
 	<button><a href="{% url 'cartaporte-update' cartaporte.id %}">Editar</a></button>

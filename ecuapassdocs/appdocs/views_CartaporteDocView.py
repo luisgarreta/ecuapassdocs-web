@@ -14,13 +14,13 @@ from django.views.decorators.csrf import csrf_protect
 # Own imports
 from ecuapassdocs.ecuapassutils.resourceloader import ResourceLoader 
 
-from .views_DocEcuapass import DocEcuapassView
-from .models_DocCartaporte import CartaporteDoc, Cartaporte, Empresa
+from .views_EcuapassDocView import EcuapassDocView
+from .models_CartaporteDoc import CartaporteDoc, Cartaporte, Empresa
 
 #--------------------------------------------------------------------
 #-- Vista para manejar las solicitudes de manifiesto
 #--------------------------------------------------------------------
-class DocCartaporteView (DocEcuapassView):
+class CartaporteDocView (EcuapassDocView):
 	template_name = "cartaporte-forma.html"
 
 	def __init__(self, *args, **kwargs):
