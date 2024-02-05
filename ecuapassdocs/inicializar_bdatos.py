@@ -2,7 +2,11 @@
 import os
 from traceback import format_exc
 import sqlite3
+import psycopg2
 
+#from psycopg2 import sql
+
+"""
 a = input ("Remove sqlite...")
 os.system ("rm db.sqlite3")
 os.system ("rm appdocs/migrations/00*.py")
@@ -20,6 +24,20 @@ os.system ("python manage.py createsuperuser ")
 # Connect to SQLite database (or create it if it doesn't exist)
 conn = sqlite3.connect('db.sqlite3')
 # Create a cursor object to interact with the database
+cursor = conn.cursor()
+"""
+
+# Local posgress DB
+db_params= {
+    'dbname': 'ecuapassdocsdb',
+    'user': 'lg',
+    'password': 'lge',
+    'host': 'localhost',
+    'port': '5432',
+}
+
+# Create a cursor object to interact with the database
+conn = psycopg2.connect(**db_params)
 cursor = conn.cursor()
 
 a = input ("Data...")
@@ -40,6 +58,8 @@ try:
                 VALUES (?, ?, ?, ?, ?, ?) ''', vehiculos_data)
 except:
     print ("Datos vehiculos ya existen")
+
+
 
 #--------------------------------------------------------------------    
 #-- Empresas

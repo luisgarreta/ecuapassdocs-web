@@ -104,6 +104,7 @@
 		}
 
     	/* Establece las coordenadas (X, Y) y el ancho y alto de los campos de texto */
+		/*
 		#txt00 { position: absolute; left: 797px; top: 82px; width: 233px; height: 28px; }
 		#txt01 { position: absolute; left: 40px; top: 162px; width: 501px; height: 103px; }
 		#txt02 { position: absolute; left: 40px; top: 302px; width: 501px; height: 63px; }
@@ -145,6 +146,7 @@
 		#txt22 { position: absolute; left: 555px; top: 1103px; width: 503px; height: 108px; }
 		#txt23 { position: absolute; left: 555px; top: 1333px; width: 503px; height: 10px; }
 		#txt24 { position: absolute; left: 477px; top: 1357px; width: 173px; height: 23px; }
+		*/
 
     </style>
 		<!-- For PDF -->
@@ -253,6 +255,14 @@
 			textArea.style.fontSize  = input["fontSize"];
 			textArea.style.textAlign = input ["align"];
 			textArea.style.position = "absolute";
+
+			textArea.style.left   = input ["x"]  + "px";
+			textArea.style.top    = input ["y"]  + "px";
+			textArea.style.width  = input ["width"]  + "px";
+			textArea.style.height = input ["height"] + "px";
+			st = textArea.style
+			console.log (">>> input", st.left, st.top, st.width, st.height);
+
 			textArea.addEventListener ('input', handleInput);
 		});
 

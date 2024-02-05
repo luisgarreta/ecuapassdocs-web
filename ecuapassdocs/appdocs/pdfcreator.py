@@ -22,13 +22,13 @@ class CreadorPDF:
 	def __init__ (self, docType):
 		self.docType = docType
 		if docType == "manifiesto":
-			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'image-manifiesto-vacio-NTA.pdf')
-			self.backgroundImg = ResourceLoader.loadImage ("docs", 'image-manifiesto-vacio-NTA.png')
+			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'manifiesto-vacio-NTA-BYZA.pdf')
+			self.backgroundImg = ResourceLoader.loadImage ("docs", 'manifiesto-vacio-NTA-BYZA.png')
 			self.inputBounds   = ResourceLoader.loadJson ("docs", 'manifiesto_input_parameters.json')
 			self.prefix = "MCI"
 		elif docType == "cartaporte":
-			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'image-cartaporte-vacia-SILOG.pdf')
-			self.backgroundImg = ResourceLoader.loadImage ("docs", 'image-cartaporte-vacia-SILOG.png')
+			self.backgroundPdf = ResourceLoader.loadPdf ("docs", 'cartaporte-vacia-SILOG-BYZA.pdf')
+			self.backgroundImg = ResourceLoader.loadImage ("docs", 'cartaporte-vacia-SILOG-BYZA.png')
 			self.inputBounds   = ResourceLoader.loadJson ("docs", 'cartaporte_input_parameters.json')
 			self.prefix = "CPI"
 		else:
@@ -74,13 +74,18 @@ class CreadorPDF:
 		can = canvas.Canvas(packet)
 
 		for key, params in inputBounds.items():
-			imgBounds = [params["x"], params["y"], params ["width"], params ["height"]]
+			imgBounds = [params["x"]-7, params["y"]-7, params ["width"], params ["height"]]
 			pdfBounds = self.convertToImageToPdfBounds (imgBounds)
 
-			if params ["font"] == "normal":
-				FONTSIZE = 8
+			print (">>>", params ["font"])
+			if params ["font"] == "hidden":
+				FONTSIZE = 0
+			elif params ["font"] == "normal":
+				FONTSIZE = 9
 			elif params ["font"] == "large":
 				FONTSIZE = 16
+			elif params ["font"] == "small":
+				FONTSIZE = 8
 			can.setFont ("Helvetica-Bold", FONTSIZE)
 
 			text         = inputValues [key]

@@ -1,5 +1,5 @@
 
-import json, os, re, traceback
+import json, os, re
 from os.path import join
 
 from django.http import HttpResponse, HttpResponseRedirect
